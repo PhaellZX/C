@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-/*
+
 int main(){
 	
 	//SEMANA 02
 	
 	//ATIVIDADE 01
 	
-	/*char matriz[7][7];
+	char matriz[7][7];
 	
 	for(int i = 0; i < 7; i++){
 		for(int j = 0; j < 7; j++){
@@ -28,9 +28,9 @@ int main(){
 		  }
 		  	printf("\n");
 	   }
-	  */ 
+	   
 	   // ATIVIDADE 02
-	   /*
+	   
 	   char matriz[7][7];
 	
 		for(int i = 0; i < 7; i++){
@@ -51,9 +51,9 @@ int main(){
 		  }
 		  	printf("\n");
 	   }
-	   */
+	   
 	   //ATIVIDADE 03
-	   /*
+	   
 	   char matriz[7][7];
 	
 	for(int i = 0; i < 7; i++){
@@ -77,11 +77,11 @@ int main(){
 	   */
 	   
 	   //ATIVIDADE 04
-	   /*
+	   
 	   char matriz[7][7];
 	
-	for(int i = 0; i < 7; i++){
-		for(int j = 0; j < 7; j++){
+	    for(int i = 0; i < 7; i++){
+			for(int j = 0; j < 7; j++){
 			
 			if(i>=3 && j>=3 || i<=3 && j<=3){
 				
@@ -98,21 +98,21 @@ int main(){
 		  }
 		  	printf("\n");
 	   }
-	   */
+	   
 		//ATIVIDADE 05
 		
-		// a) b[0] será o valor da váriavel e &b[0] é o endereço da mémoria da variável
-		// b) O b[0] está armazenando o valor fixo da váriavel, já o &b[0] está armazenando 
-		// no endereço da váriavel e que estar alocada entre 4 slots de endereços   
+		// a) b[0] serÃ¡ o valor da vÃ¡riavel e &b[0] Ã© o endereÃ§o da mÃ©moria da variÃ¡vel
+		// b) O b[0] estÃ¡ armazenando o valor fixo da vÃ¡riavel, jÃ¡ o &b[0] estÃ¡ armazenando 
+		// no endereÃ§o da vÃ¡riavel e que estar alocada entre 4 slots de endereÃ§os   
 	
-		//ATIVIDADE 06
+		//ATIVIDADE 06 & 7
 		
 	struct Cpessoa {
 		
 		char nome[10];
 		int idade;
 		
-	};
+		};
 	
 	int main(){
 		
@@ -149,4 +149,4 @@ int main(){
 			return 0;
 	}
 	
-
+	
