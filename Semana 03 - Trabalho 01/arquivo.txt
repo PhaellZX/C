@@ -1,3 +1,0 @@
-id:1001 nome:Arthur nota1:10.0 nota2:5.5 nota3:6.0 nota4:9.0 media:7.6
-id:1002 nome:Ivo nota1:5.5 nota2:10.0 nota3:2.0 nota4:1.0 media:4.6
-id:1003 nome:Jael nota1:8.0 nota2:9.0 nota3:10.0 nota4:2.0 media:7.3
