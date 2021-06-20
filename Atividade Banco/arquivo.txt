@@ -1,0 +1,10 @@
+1001 Tony 500.00
+1002 Stevie 700.50
+1003 Benner 1000.00
+1004 Rocky 300.50
+1005 Bean 600.00
+1006 Madruga 800.30
+1007 Barriga 1100.00
+1008 Patinhas 100.20
+1009 Musk 300.00
+1010 Trump 750.30
