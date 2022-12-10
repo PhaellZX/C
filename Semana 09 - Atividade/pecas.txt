@@ -1,6 +1,0 @@
-MOTOR(Pecas):
-6 - 
-6 - Cabecote
-5 - Carter
-4 - Virabrequim
-1 - bloco
