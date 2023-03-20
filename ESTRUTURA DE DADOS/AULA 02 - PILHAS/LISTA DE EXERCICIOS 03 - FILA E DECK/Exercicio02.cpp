@@ -67,23 +67,6 @@ int main(){
 			printf("Guinche 03: %d\n",dequeue(filaPadrao));
 		}
 	}
-	
-	
-	/*if(!empty(filaPref)){
-		printf("Guinche 01: %d\n",dequeue(filaPref));
-		if(!empty(filaPref)){
-			printf("Guinche 02: %d\n",dequeue(filaPref));
-		}
-		if(empty(filaPadrao)){
-			printf("Guinche 03: %d\n",dequeue(filaPref));
-		}
-	} else {
-		printf("Guinche 01: %d\n",dequeue(filaPadrao));
-		printf("Guinche 02: %d\n",dequeue(filaPadrao));
-	}*/
-	if(!empty(filaPadrao)){
-		printf("Guinche 03: %d\n",dequeue(filaPadrao));
-	}
 }
 return 0;
 }
