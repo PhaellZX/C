@@ -47,8 +47,7 @@ int empty(Fila * f){
 int dequeue(Fila * f){
 	int v;
 	if(empty(f)){
-		printf("Fila vazia.\n");
-		exit(1);
+		return 0;
 	}
 	v= f->vet[f->ini];
 	f->ini = (f->ini + 1) % N;
@@ -60,10 +59,9 @@ int dequeue(Fila * f){
 
 void print_queue(Fila *f) {
     int i;
-    if (empty(f)) {
-        printf("Fila vazia.\n");
-        return;
-    }
+    if(empty(f)){
+    	printf("Fila vazia.");
+	}
     for (i = f->ini; i < f->ini + f->n; i++) {
         printf("%d ", f->vet[i % N]);
     }
