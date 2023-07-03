@@ -22,6 +22,7 @@ typedef struct Node_Binary {
     char codMunic[MAX_FIELD_LENGTH];
     char nomeMunicipio[MAX_FIELD_LENGTH];
     char populacaoEstimada[MAX_FIELD_LENGTH];
+    struct Node_Binary* next;
 } Node_Binary;
 
 int hashFunction(const char* key);
@@ -52,8 +53,8 @@ int hashFunction(const char* key) {
 }
 
 int compareNodes(const void* a, const void* b) {
-    const Node_Binary* nodeA = (const Node_Binary*)a;
-    const Node_Binary* nodeB = (const Node_Binary*)b;
+    const Node_Binary* nodeA = *(const Node_Binary**)a;
+    const Node_Binary* nodeB = *(const Node_Binary**)b;
 
     return strcmp(nodeA->codMunic, nodeB->codMunic);
 }
@@ -73,22 +74,16 @@ void testAccess(Node* hashTable[], Node_Binary* sortedNodeArray[], int nodeArray
     printf("Acesso por Tabela Dispersa: Município não encontrado.\n");
 
     // Acesso usando busca binária
-    int low = 0;
-    int high = nodeArraySize - 1;
-    while (low <= high) {
-        int mid = low + (high - low) / 2;
-        int comparison = strcmp(sortedNodeArray[mid]->codMunic, codMunic);
-        if (comparison == 0) {
-            printf("Acesso por Busca Binária: Nome do Município: %s, População Estimada: %s\n",
-                sortedNodeArray[mid]->nomeMunicipio, sortedNodeArray[mid]->populacaoEstimada);
-            return;
-        } else if (comparison < 0) {
-            low = mid + 1;
-        } else {
-            high = mid - 1;
-        }
-    }
-    printf("Acesso por Busca Binária: Município não encontrado.\n");
+	Node_Binary searchNode;
+		strcpy(searchNode.codMunic, codMunic);
+	Node_Binary** foundNode = (Node_Binary**)bsearch(&searchNode, sortedNodeArray, nodeArraySize, sizeof(Node_Binary*), compareNodes);
+	if (foundNode != NULL) {
+    printf("Acesso por Busca Binária: Nome do Município: %s, População Estimada: %s\n",
+        (*foundNode)->nomeMunicipio, (*foundNode)->populacaoEstimada);
+	} else {
+	    printf("Acesso por Busca Binária: Município não encontrado.\n");
+	}
+
 }
 
 int main() {
@@ -96,20 +91,19 @@ int main() {
 
     FILE* file = fopen("cidades.csv", "r");
     if (file == NULL) {
-        printf("Erro ao abrir o arquivo.");
+        printf("Erro ao abrir o arquivo.\n");
         return 1;
     }
 
     Node* hashTable[HASH_SIZE] = { NULL };
+    Node* nodeArray[MAX_LINE_LENGTH / 2];
     Node_Binary* sortedNodeArray[MAX_LINE_LENGTH / 2];
     int nodeArraySize = 0;
 
     char line[MAX_LINE_LENGTH];
     char field[MAX_FIELD_LENGTH];
 
-    // Ignorar o cabeçalho do arquivo
-    fgets(line, MAX_LINE_LENGTH, file);
-
+    int row = 0;
     while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
         char* token;
         char* rest = line;
@@ -135,22 +129,25 @@ int main() {
 
             insert(hashTable, newNode);
 
-            Node_Binary* newSortedNode = (Node_Binary*)malloc(sizeof(Node_Binary));
-            strcpy(newSortedNode->uf, columns[0]);
-            strcpy(newSortedNode->codUf, columns[1]);
-            strcpy(newSortedNode->codMunic, columns[2]);
-            strcpy(newSortedNode->nomeMunicipio, columns[3]);
-            strcpy(newSortedNode->populacaoEstimada, columns[4]);
-
-            sortedNodeArray[nodeArraySize] = newSortedNode;
+            nodeArray[nodeArraySize] = newNode;
             nodeArraySize++;
+
+            Node_Binary* newSortedNode = (Node_Binary*)malloc(sizeof(Node_Binary));
+            strcpy(newSortedNode->uf, newNode->uf);
+            strcpy(newSortedNode->codUf, newNode->codUf);
+            strcpy(newSortedNode->codMunic, newNode->codMunic);
+            strcpy(newSortedNode->nomeMunicipio, newNode->nomeMunicipio);
+            strcpy(newSortedNode->populacaoEstimada, newNode->populacaoEstimada);
+            newSortedNode->next = NULL;
+
+            sortedNodeArray[nodeArraySize - 1] = newSortedNode;
         }
 
         for (int i = 0; i < column; i++) {
             free(columns[i]);
         }
 
-        cont++;
+        row++;
     }
 
     fclose(file);
@@ -158,7 +155,20 @@ int main() {
     // Ordenar os nós usando qsort
     qsort(sortedNodeArray, nodeArraySize, sizeof(Node_Binary*), compareNodes);
 
+    // Imprimir os nós ordenados
+    /*for (int i = 0; i < nodeArraySize; i++) {
+        Node_Binary* sortedNode = sortedNodeArray[i];
+        printf("UF: %s, Cod. UF: %s, Cod. Munic: %s, Nome do Município: %s, População Estimada: %s\n",
+            sortedNode->uf, sortedNode->codUf, sortedNode->codMunic, sortedNode->nomeMunicipio, sortedNode->populacaoEstimada);
+        cont++;
+    }*/
+
     printf("\n%d\n", cont);
+
+    // Liberar a memória alocada para os nós ordenados
+    for (int i = 0; i < nodeArraySize; i++) {
+        free(sortedNodeArray[i]);
+    }
 
     // Testar o acesso aos dados usando tabela dispersa e busca binária
     printf("\nTeste de acesso aos dados:\n");
@@ -166,23 +176,21 @@ int main() {
     char codMunic[MAX_FIELD_LENGTH];
     fgets(codMunic, MAX_FIELD_LENGTH, stdin);
     codMunic[strcspn(codMunic, "\n")] = '\0'; // Remover a quebra de linha do final
+
     testAccess(hashTable, sortedNodeArray, nodeArraySize, codMunic);
 
-    // Liberar a memória alocada para os nós ordenados
-    for (int i = 0; i < nodeArraySize; i++) {
-        free(sortedNodeArray[i]);
-    }
-
-    // Liberar a memória alocada para os nós da tabela de hash
+	// Liberar a memória alocada para os nós da tabela de hash
     for (int i = 0; i < HASH_SIZE; i++) {
         Node* current = hashTable[i];
         while (current != NULL) {
             Node* temp = current;
             current = current->next;
-            free(temp);
+                        free(temp);
         }
     }
 
     return 0;
 }
+
+
 
