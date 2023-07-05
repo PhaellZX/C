@@ -255,7 +255,7 @@ int main() {
     printNodeArray(&nodeArray);
 
     // Test access to the data
-    int cod_munic = 15;  // Municipality code to search for
+    int cod_munic = 9457;  // Municipality code to search for
     
     printf("\n");
     
