@@ -198,6 +198,10 @@ void testAccess(HashTable* table, NodeArray* nodeArray, MunicipioArray* munArray
     if (hashNode != NULL) {
         printf("Buscando usando Hash Table:\n");
         imprimirMunicipio(*hashNode);
+        imprimirMunicipio(*hashNode);
+        imprimirMunicipio(*hashNode);
+        imprimirMunicipio(*hashNode);
+        
     } else {
         printf("Município nao encontrado com Hash Table.\n");
     }
@@ -206,6 +210,9 @@ void testAccess(HashTable* table, NodeArray* nodeArray, MunicipioArray* munArray
     Node* binarySearchNode = findMunicipioBinarySearch(munArray, cod_munic);
     if (binarySearchNode != NULL) {
         printf("Buscando usando bsearch():\n");
+        imprimirMunicipio(*binarySearchNode);
+        imprimirMunicipio(*binarySearchNode);
+    	imprimirMunicipio(*binarySearchNode);
         imprimirMunicipio(*binarySearchNode);
     } else {
         printf("Município nao encontrado usando bsearch().\n");

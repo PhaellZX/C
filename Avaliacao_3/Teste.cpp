@@ -33,6 +33,7 @@ typedef struct {
     int count;
 } NodeArray;
 
+
 HashTable* createHashTable() {
     HashTable* table = (HashTable*)malloc(sizeof(HashTable) * TABLE_SIZE);
     for (int i = 0; i < TABLE_SIZE; i++) {
@@ -198,6 +199,9 @@ void testAccess(HashTable* table, NodeArray* nodeArray, MunicipioArray* munArray
     if (hashNode != NULL) {
         printf("Buscando usando Hash Table:\n");
         imprimirMunicipio(*hashNode);
+        imprimirMunicipio(*hashNode);
+        imprimirMunicipio(*hashNode);
+        imprimirMunicipio(*hashNode);
         printf("Posição na tabela hash: %d\n", hashFunction(hashNode->cod_munic));
     } else {
         printf("Município nao encontrado com Hash Table.\n");
@@ -208,16 +212,55 @@ void testAccess(HashTable* table, NodeArray* nodeArray, MunicipioArray* munArray
     if (binarySearchNode != NULL) {
         printf("Buscando usando bsearch():\n");
         imprimirMunicipio(*binarySearchNode);
-        printf("Quantidade de acessos na busca binária: %d\n", munArray->count);
+        imprimirMunicipio(*binarySearchNode);
+        imprimirMunicipio(*binarySearchNode); 
+        imprimirMunicipio(*binarySearchNode);
+		printf("Quantidade de acessos na busca binária: %d\n", munArray->count);
     } else {
         printf("Município nao encontrado usando bsearch().\n");
+    }
+}
+
+int binarySearch(NodeArray* nodeArray, int cod_munic, int* accessCount) {
+    int left = 0;
+    int right = nodeArray->count - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        (*accessCount)++; 
+
+        if (nodeArray->nodes[mid]->cod_munic == cod_munic) {
+            return mid;
+        }
+
+        if (nodeArray->nodes[mid]->cod_munic < cod_munic) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    return -1;
+}
+
+void testBinarySearch(NodeArray* nodeArray, int cod_munic) {
+    int accessCount = 0;
+    int index = binarySearch(nodeArray, cod_munic, &accessCount);
+
+    if (index != -1) {
+        Node* node = nodeArray->nodes[index];
+        printf("Código do município: %d\n", node->cod_munic);
+        printf("Nome do município: %s\n", node->nome_municipio);
+        printf("Quantidade de acessos: %d\n", accessCount);
+    } else {
+        printf("Município não encontrado.\n");
     }
 }
 
 
 int main() {
     FILE* arquivo;
-    int cont = 0;
+    int cont = 0, i = 0;
     char nome_arquivo[MAX_LINE_LENGTH] = "cidades.csv";
     char linha[MAX_LINE_LENGTH];
     Node municipio;
@@ -241,10 +284,10 @@ int main() {
         cont++;
     }
     
-    insertData(table, "RS", 43, 43, "Albatroz", 5000);
-	insertData(table, "SC", 42, 42, "Borrusia", 4000);
-	insertData(table, "PR", 41, 41, "Palmital", 3000);
-	insertData(table, "MT", 51, 40, "Laranjeiras", 2000);
+    insertData(table, "RS", 43, 6001, "Albatroz", 5000);
+	insertData(table, "SC", 42, 6001, "Borrusia", 4000);
+	insertData(table, "PR", 41, 6001, "Palmital", 3000);
+	insertData(table, "MT", 51, 6001, "Laranjeiras", 2000);
 	
     // Fechar o arquivo
     fclose(arquivo);
@@ -264,7 +307,7 @@ int main() {
     printNodeArray(&nodeArray);
 
     // Test access to the data
-    int cod_munic = 40;  // Municipality code to search for
+    int cod_munic = 6001;  // Municipality code to search for
     
     printf("\n");
     
