@@ -19,6 +19,16 @@ typedef struct {
 } HashTable;
 
 typedef struct {
+    int cod_munic;
+    Node* node;
+} MunicipioEntry;
+
+typedef struct {
+    MunicipioEntry* entries;
+    int count;
+} MunicipioArray;
+
+typedef struct {
     Node** nodes;
     int count;
 } NodeArray;
@@ -87,6 +97,13 @@ int compareNodes(const void* a, const void* b) {
     return strcmp(nodeA->nome_municipio, nodeB->nome_municipio);
 }
 
+int compareMunicipioEntry(const void* a, const void* b) {
+    MunicipioEntry* entryA = (MunicipioEntry*)a;
+    MunicipioEntry* entryB = (MunicipioEntry*)b;
+
+    return entryA->cod_munic - entryB->cod_munic;
+}
+
 void createNodeArray(HashTable* table, NodeArray* nodeArray) {
     int totalCount = 0;
     for (int i = 0; i < TABLE_SIZE; i++) {
@@ -118,6 +135,83 @@ void printNodeArray(NodeArray* nodeArray) {
     }
 }
 
+MunicipioArray* createMunicipioArray(HashTable* table) {
+    MunicipioArray* munArray = (MunicipioArray*)malloc(sizeof(MunicipioArray));
+    int totalCount = 0;
+
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        Node* current = table[i].head;
+        while (current != NULL) {
+            totalCount++;
+            current = current->next;
+        }
+    }
+
+    munArray->entries = (MunicipioEntry*)malloc(sizeof(MunicipioEntry) * totalCount);
+    munArray->count = 0;
+
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        Node* current = table[i].head;
+        while (current != NULL) {
+            munArray->entries[munArray->count].cod_munic = current->cod_munic;
+            munArray->entries[munArray->count].node = current;
+            munArray->count++;
+            current = current->next;
+        }
+    }
+
+    qsort(munArray->entries, munArray->count, sizeof(MunicipioEntry), compareMunicipioEntry);
+
+    return munArray;
+}
+
+Node* findMunicipioHashTable(HashTable* table, int cod_munic) {
+    int index = hashFunction(cod_munic);
+    Node* current = table[index].head;
+
+    while (current != NULL) {
+        if (current->cod_munic == cod_munic) {
+            return current;
+        }
+        current = current->next;
+    }
+
+    return NULL;
+}
+
+Node* findMunicipioBinarySearch(MunicipioArray* munArray, int cod_munic) {
+    MunicipioEntry target;
+    target.cod_munic = cod_munic;
+
+    MunicipioEntry* foundEntry = (MunicipioEntry*)bsearch(&target, munArray->entries, munArray->count, sizeof(MunicipioEntry), compareMunicipioEntry);
+
+    if (foundEntry != NULL) {
+        return foundEntry->node;
+    }
+
+    return NULL;
+}
+
+void testAccess(HashTable* table, NodeArray* nodeArray, MunicipioArray* munArray, int cod_munic) {
+    // Access using Hash Table
+    Node* hashNode = findMunicipioHashTable(table, cod_munic);
+    if (hashNode != NULL) {
+        printf("Buscando usando Hash Table:\n");
+        imprimirMunicipio(*hashNode);
+    } else {
+        printf("Município nao encontrado com Hash Table.\n");
+    }
+
+    // Access using Binary Search
+    Node* binarySearchNode = findMunicipioBinarySearch(munArray, cod_munic);
+    if (binarySearchNode != NULL) {
+        printf("Buscando usando bsearch():\n");
+        imprimirMunicipio(*binarySearchNode);
+    } else {
+        printf("Município nao encontrado usando bsearch().\n");
+    }
+}
+
 int main() {
     FILE* arquivo;
     int cont = 0;
@@ -128,7 +222,6 @@ int main() {
     // Criar a tabela hash
     HashTable* table = createHashTable();
 
-    // Abrir o arquivo para leitura
     arquivo = fopen(nome_arquivo, "r");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo.\n");
@@ -148,32 +241,29 @@ int main() {
     fclose(arquivo);
 
     // Imprimir os dados da tabela hash
-    //printHashTable(table);
+    printHashTable(table);
 
     // Criar a matriz de nós e ordenar os dados
     NodeArray nodeArray;
     createNodeArray(table, &nodeArray);
 
+    // Criar o array de municípios ordenados
+    MunicipioArray* munArray = createMunicipioArray(table);
+
     // Imprimir os dados ordenados
-    printf("\nDados Ordenados(Table Hash):\n");
+    printf("\nDados Ordenados(Hash Table):\n");
     printNodeArray(&nodeArray);
 
-    // Liberar a memória alocada para a tabela hash
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        Node* current = table[i].head;
-        while (current != NULL) {
-            Node* temp = current;
-            current = current->next;
-            free(temp);
-        }
-    }
-    free(table);
-
-    // Liberar a memória alocada para a matriz de nós
-    free(nodeArray.nodes);
+    // Test access to the data
+    int cod_munic = 15;  // Municipality code to search for
+    
+    printf("\n");
+    
+    testAccess(table, &nodeArray, munArray, cod_munic);
 
     printf("\nNumeros de Cidades no CSV: %d", cont);
     return 0;
 }
+
 
 
