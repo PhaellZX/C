@@ -194,7 +194,6 @@ Node* findMunicipioBinarySearch(MunicipioArray* munArray, int cod_munic) {
 }
 
 void testAccess(HashTable* table, NodeArray* nodeArray, MunicipioArray* munArray, int cod_munic) {
-    // Access using Hash Table
     Node* hashNode = findMunicipioHashTable(table, cod_munic);
     if (hashNode != NULL) {
         printf("Buscando usando Hash Table:\n");
@@ -202,12 +201,11 @@ void testAccess(HashTable* table, NodeArray* nodeArray, MunicipioArray* munArray
         imprimirMunicipio(*hashNode);
         imprimirMunicipio(*hashNode);
         imprimirMunicipio(*hashNode);
-        printf("Posição na tabela hash: %d\n", hashFunction(hashNode->cod_munic));
+        printf("Posicao na tabela hash: %d\n", hashFunction(hashNode->cod_munic));
     } else {
-        printf("Município nao encontrado com Hash Table.\n");
+        printf("Municipio nao encontrado com Hash Table.\n");
     }
 
-    // Access using Binary Search
     Node* binarySearchNode = findMunicipioBinarySearch(munArray, cod_munic);
     if (binarySearchNode != NULL) {
         printf("Buscando usando bsearch():\n");
@@ -215,9 +213,9 @@ void testAccess(HashTable* table, NodeArray* nodeArray, MunicipioArray* munArray
         imprimirMunicipio(*binarySearchNode);
         imprimirMunicipio(*binarySearchNode); 
         imprimirMunicipio(*binarySearchNode);
-		printf("Quantidade de acessos na busca binária: %d\n", munArray->count);
+		printf("Quantidade de acessos na busca binaria: %d\n", munArray->count);
     } else {
-        printf("Município nao encontrado usando bsearch().\n");
+        printf("Municipio nao encontrado usando bsearch().\n");
     }
 }
 
@@ -249,11 +247,11 @@ void testBinarySearch(NodeArray* nodeArray, int cod_munic) {
 
     if (index != -1) {
         Node* node = nodeArray->nodes[index];
-        printf("Código do município: %d\n", node->cod_munic);
-        printf("Nome do município: %s\n", node->nome_municipio);
+        printf("Codigo do municipio: %d\n", node->cod_munic);
+        printf("Nome do municipio: %s\n", node->nome_municipio);
         printf("Quantidade de acessos: %d\n", accessCount);
     } else {
-        printf("Município não encontrado.\n");
+        printf("Municipio não encontrado.\n");
     }
 }
 
@@ -289,7 +287,6 @@ int main() {
 	insertData(table, "PR", 41, 6001, "Palmital", 3000);
 	insertData(table, "MT", 51, 6001, "Laranjeiras", 2000);
 	
-    // Fechar o arquivo
     fclose(arquivo);
 
     // Imprimir os dados da tabela hash
@@ -307,13 +304,13 @@ int main() {
     printNodeArray(&nodeArray);
 
     // Test access to the data
-    int cod_munic = 6001;  // Municipality code to search for
+    int cod_munic = 6001; 
     
     printf("\n");
     
     testAccess(table, &nodeArray, munArray, cod_munic);
 
-    printf("\nNumeros de Cidades no CSV: %d", cont);
+    printf("\nNumeros de Cidades no CSV: %d", cont); // Isso é só um teste
     return 0;
 }
 
